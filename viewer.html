@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회차 보기</title>
+  <style>
+
+    * {
+ box-sizing: border-box;
+ }
+
+    body {
+ margin:0; 
+font-family: 'Nanum Gothic', serif; 
+background:#fff; 
+color:#111;
+ }
+
+    .viewer-bar {
+      position: fixed; 
+left:0; 
+right:0; 
+display:flex; 
+align-items:center; 
+justify-content:space-between;
+      padding:0.6rem 1rem; 
+background: #fff; z-index:1000; border-bottom:1px solid #eee;
+    }
+
+    .viewer-bar .title { font-weight:700; text-align:center; flex:1; }
+
+    .viewer-bar button { background:none; border:0; cursor:pointer; font-size:1rem; }
+
+    #episodeImages { padding-top:64px; padding-bottom:64px; max-width:900px; margin:0 auto; }
+
+    #episodeImages img { width:100%; max-width:900px; display:block; margin:0 auto 24px; }
+    .nav-bottom {
+      position: fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:1rem; padding:0.6rem 1rem;
+      background: #fff; border-top:1px solid #eee; z-index:1000;
+    }
+    .nav-bottom button { padding:0.4rem 0.8rem; border-radius:6px; border:0px solid #ddd; background:#fff; cursor:pointer; }
+    .nav-bottom button:disabled { opacity:0.5; cursor:default; }
+    @media screen and (max-width:768px) {
+      #episodeImages { padding-top:56px; padding-bottom:56px; }
+      #episodeImages img { margin-bottom:16px; }
+    }
+
+/* 상단/하단 바에 부드러운 애니메이션 효과 추가 */
+.viewer-bar, .nav-bottom {
+    transition: transform 0.3s ease-in-out; 
+    /* z-index는 이미 1000으로 충분합니다. */
+}
+
+/* 바가 숨겨졌을 때 (JavaScript로 이 클래스를 추가/제거할 것입니다) */
+.viewer-bar.hidden {
+    /* 상단 바를 위로 (자기 높이만큼) 이동시켜 숨김 */
+    transform: translateY(-100%); 
+}
+
+.nav-bottom.hidden {
+    /* 하단 바를 아래로 (자기 높이만큼) 이동시켜 숨김 */
+    transform: translateY(100%); 
+}
+
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    
+    /* 모양: 둥글게, 크기, 색상 */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* 둥근 모양 */
+    background-color: rgba(255, 255, 255, 0.8);    color: #000;
+    font-size: 1.2rem;
+    line-height: 45px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out; 
+    z-index: 999; 
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scroll-to-top-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-to-top-btn.hidden {
+    bottom: -60px;
+    opacity: 0;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="viewer-bar">
+    <button id="btnBack">←</button>
+    <div class="title" id="viewerTitle">제목</div>
+    <div style="width:48px;"></div>
+  </div>
+
+  <main id="episodeImages"></main>
+
+  <div class="nav-bottom">
+    <button id="prevBtn">〈</button>
+    <button id="nextBtn">〉</button>
+  </div>
+
+<button id="scrollToTopBtn" class="scroll-to-top-btn" title="맨 위로 올라가기">
+    ↑
+</button>
+
+  <script>
+
+    const works = {
+      "2508": {
+        title: "HIBERNATION",
+        episodes: [
+          { title: "1화", images: [
+"img/박세은/열만_001.jpg","img/박세은/열만_002.jpg","img/박세은/열만_003.jpg","img/박세은/열만_004.jpg","img/박세은/열만_005.jpg","img/박세은/열만_006.jpg","img/박세은/열만_007.jpg","img/박세은/열만_008.jpg","img/박세은/열만_009.jpg","img/박세은/열만_010.jpg","img/박세은/열만_011.jpg","img/박세은/열만_012.jpg","img/박세은/열만_013.jpg","img/박세은/열만_014.jpg","img/박세은/열만_015.jpg","img/박세은/열만_016.jpg","img/박세은/열만_017.jpg","img/박세은/열만_018.jpg","img/박세은/열만_019.jpg","img/박세은/열만_020.jpg","img/박세은/열만_021.jpg","img/박세은/열만_022.jpg","img/박세은/열만_023.jpg"
+          ] }
+        ]
+      },
+
+
+      "2518": {
+        title: "Me: mori;",
+        episodes: [
+          { title: "1화", images: [
+"img/이윤서/1화_001.png","img/이윤서/1화_002.png","img/이윤서/1화_003.png","img/이윤서/1화_004.png","img/이윤서/1화_005.png","img/이윤서/1화_006.png","img/이윤서/1화_007.png","img/이윤서/1화_008.png","img/이윤서/1화_009.png","img/이윤서/1화_010.png","img/이윤서/1화_011.png"
+          ]},
+          { title: "2화", images: ["img/이윤서/2화_001.png","img/이윤서/2화_002.png"] },
+          { title: "3화", images: ["img/이윤서/3화_001.png","img/이윤서/3화_002.png"] }
+        ]
+      },
+      "2524": {
+        title: "유성의 바다",
+        episodes: [
+          { title: "1화", images: ["img/정아인/1화/1.jpg","img/정아인/1화/2.jpg","img/정아인/1화/3.jpg","img/정아인/1화/4.jpg","img/정아인/1화/5.jpg","img/정아인/1화/6.jpg","img/정아인/1화/7.jpg","img/정아인/1화/8.jpg","img/정아인/1화/9.jpg","img/정아인/1화/10.jpg","img/정아인/1화/11.jpg"] },
+          { title: "2화", images: ["img/정아인/2화/1.jpg","img/정아인/2화/2.jpg"] },
+          { title: "3화", images: ["img/정아인/3화/1.jpg","img/정아인/3화/2.jpg"] }
+        ]
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('workId');
+    let ep = parseInt(params.get('ep') || 0, 10);
+
+const data = works[id];
+    if (!data) {
+
+document.getElementById('episodeImages').innerHTML = '<p style="padding:2rem;">잘못된 작품입니다. work.html?id=작품id 로 접속해 주세요.</p>';
+document.getElementById('viewerTitle').textContent = 'Unknown';
+document.getElementById('openListBtn').onclick = () => location.href = 'page1.html';
+      document.getElementById('btnBack').onclick = () => location.href = 'page1.html';
+      throw new Error('No work data for id=' + id);
+    }
+
+    function renderEpisode(index) {
+      ep = index;
+      const container = document.getElementById('episodeImages');
+      container.innerHTML = '';
+      const episode = data.episodes[index];
+document.getElementById('viewerTitle').textContent = episode.title;
+
+      episode.images.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `${episode.title}`;
+        container.appendChild(img);
+      });
+
+      updateNav();
+      history.replaceState({ id, ep: ep }, '', `viewer.html?id=${encodeURIComponent(id)}&ep=${ep}`);
+    }
+
+    function updateNav() {
+document.getElementById('prevBtn').disabled = ep <= 0;
+document.getElementById('nextBtn').disabled = ep >= data.episodes.length - 1;
+    }
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+      if (ep > 0) { renderEpisode(ep - 1); window.scrollTo({ top: 0, behavior: 'instant' }); }
+    });
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+      if (ep < data.episodes.length - 1) { renderEpisode(ep + 1); window.scrollTo({ top: 0, behavior: 'instant' }); }
+    });
+  document.getElementById('btnBack').addEventListener('click', () => {
+      if (document.referrer && document.referrer.includes('page1.html')) {
+        history.back();
+      } else {
+location.href = `viewer.html?id=${encodeURIComponent(workId)}&ep=${index}`;
+      }
+    });
+
+
+    window.addEventListener('popstate', (e) => {
+      const state = e.state;
+      if (state && state.id === id && typeof state.ep === 'number') {
+        renderEpisode(state.ep);
+      } else {
+        location.href = `page1.html?id=${encodeURIComponent(id)}`;
+      }
+    });
+
+    renderEpisode(Math.min(Math.max(ep, 0), data.episodes.length - 1));
+
+document.getElementById('btnBack').addEventListener('click', () => {
+    if (document.referrer && document.referrer.includes('page1.html')) {
+        history.back(); 
+    } else {
+        location.href = `page1.html?workId=${id}`; 
+    }
+});
+
+const viewerBar = document.querySelector('.viewer-bar');
+const navBottom = document.querySelector('.nav-bottom');
+let isBarVisible = true; // 현재 바가 보이는 상태인지 추적
+
+// 바의 상태를 전환하는 함수
+function toggleBars(state) {
+    if (state === 'show' || state === undefined) {
+        viewerBar.classList.remove('hidden');
+        navBottom.classList.remove('hidden');
+        isBarVisible = true;
+    } else if (state === 'hide') {
+        viewerBar.classList.add('hidden');
+        navBottom.classList.add('hidden');
+        isBarVisible = false;
+    }
+}
+
+const mainContent = document.getElementById('episodeImages');
+
+mainContent.addEventListener('click', () => {
+    // 현재 상태를 반전시켜 토글합니다.
+    if (isBarVisible) {
+        toggleBars('hide');
+    } else {
+        toggleBars('show');
+    }
+});
+
+let lastScrollTop = 0; // 이전 스크롤 위치를 저장할 변수
+
+window.addEventListener('scroll', () => {
+    const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    // 1. 아래로 스크롤할 때 (숨김)
+    if (currentScrollTop > lastScrollTop && currentScrollTop > 100) { // 맨 위에서는 숨기지 않도록 100px 이상일 때 동작
+        if (isBarVisible) {
+            toggleBars('hide');
+        }
+    } 
+    // 2. 위로 스크롤할 때 (표시)
+    else if (currentScrollTop < lastScrollTop) {
+        if (!isBarVisible) {
+            toggleBars('show');
+        }
+    }
+    
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // 스크롤 위치 업데이트
+});
+
+const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+// 맨 위로 올라가기 버튼 기능
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // 부드럽게 스크롤
+    });
+});
+
+function toggleBars(state) {
+    if (state === 'show' || state === undefined) {
+        viewerBar.classList.remove('hidden');
+        navBottom.classList.remove('hidden');
+        scrollToTopBtn.classList.remove('hidden'); // ✨ 버튼 나타나게
+        isBarVisible = true;
+    } else if (state === 'hide') {
+        viewerBar.classList.add('hidden');
+        navBottom.classList.add('hidden');
+        scrollToTopBtn.classList.add('hidden'); // ✨ 버튼 숨기게
+        isBarVisible = false;
+    }
+}
+
+window.addEventListener('scroll', () => {
+    const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    // ----------------------------------------------------
+    // ✨✨✨ 스크롤 위치에 따라 버튼 보이기/숨기기 ✨✨✨
+    // ----------------------------------------------------
+    if (currentScrollTop > 300) { // 300px 이상 스크롤했을 때 버튼 활성화
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+
+    // 1. 아래로 스크롤할 때 (숨김)
+    if (currentScrollTop > lastScrollTop && currentScrollTop > 100) { 
+        if (isBarVisible) {
+            toggleBars('hide');
+        }
+    } 
+    // 2. 위로 스크롤할 때 (표시)
+    else if (currentScrollTop < lastScrollTop) {
+        if (!isBarVisible) {
+            toggleBars('show');
+        }
+    }
+    
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; 
+});
+
+  </script>
+
+</body>
+</html>
