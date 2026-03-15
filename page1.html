@@ -7,11 +7,19 @@
   <style>
     * { box-sizing: border-box; }
 
+:root{
+  --grad-color: rgba(233,233,233,1);
+  --text-color: #000;
+  --subtext-color:#000;
+  --link-color:#000;
+}
+
     body {
 margin: 0; 
 font-family: 'Nanum Gothic', Gothic; 
 background-color: 
-white; color:#111;
+white; 
+  color:var(--text-color);
  }
 
     header { 
@@ -25,43 +33,71 @@ solid #eee;
  }
 
     .wrap { 
-max-width:1400px; 
+max-width:1200px; 
 margin:0 auto;
  }
 
-    .top-section {
-      background-color: #dddddd;
-      display: flex;
-      gap: 1rem;
+.top-section{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  align-items:center;
+}
 
-      align-items: center;
-      padding: 2rem;
-      padding-left: 2rem;
-    }
+.banner{
+  position:relative;
+  height:260px;
+  background:#e5e5e5;
+  overflow:hidden;
 
-    .banner img { 
-max-width: 260px; 
-height: auto; 
-display:block; 
-border-radius:6px;
- }
+  max-width:1200px;
+  margin:0 auto;
+  border-radius:8px;
+}
 
-    .info {
- flex:1; 
-min-width:0;
- }
+.banner-img{
+  position:absolute;
+  inset:0;
+}
+
+.banner-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:right center;
+  display:block;
+}
+
+.banner-gradient{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    90deg,
+    var(--grad-color) 0%,
+    var(--grad-color) 50%,
+    transparent 70%
+  );
+  pointer-events:none;
+}
+
+.info{
+  padding-left:60px;
+  max-width:600px;
+}
 
     .info h1 { 
 
 margin: 0 0 0.5rem 0; 
 word-break:break-word;
-font-size: 2rem; 
+font-size: 3rem; 
+color: var(--text-color);
  }
 
     .info p { 
 margin: 1rem 0; 
 font-size: 0.9rem; 
-color:#333;
+  color:var(--subtext-color);
  }
 
     .links { 
@@ -73,19 +109,19 @@ margin-top: 0.75rem;
 font-size: 0.7rem; 
 margin-right: 1rem; 
 text-decoration: none; 
-color: #000;
+  color:var(--link-color);
  }
 
     #episodeListView { 
 background: white;
  }
 
-    #episodeListView ul { 
-list-style: none; 
-padding: 24px 5% 
-160px; margin: 0 auto; 
-max-width: 1400px;
- }
+#episodeListView ul { 
+list-style:none;
+padding:24px 0 160px;
+margin:0 auto;
+max-width:1200px;
+}
 
     #episodeList { 
 padding: 0; 
@@ -130,29 +166,80 @@ margin:0 0 0.25rem 0;
 word-break:break-word;
  }
 
-    .ep-sub { 
-font-size:0.95rem; 
-color:#666;
- }
 
-    /* responsive */
+    @media screen and (max-width: 480px) {
 
-    @media screen and (max-width: 768px) {
 
-      .top-section {
- flex-direction:row; 
-padding:1rem; 
-gap:0.75rem; 
-align-items:flex-start;
- }
+.banner{
+width:100%;
+height:auto;
+    border-radius:0;
+    overflow:hidden;
+}
 
-      .banner img {
-max-width:120px;
- }
+.top-section{
+    position:relative;
+    z-index:2;
+    display:block;
+    height:auto;
+    background:#fff;
 
-      .info h1 { 
-font-size:1.15rem;
- }
+}
+
+  .banner-img{
+    position:relative;
+    inset:auto;
+    z-index:0;
+height:220px;   /* 원하는 높이 */
+overflow:hidden;
+  }
+
+  .banner-img img{
+    display:block;
+    width:100%;
+height:100%;
+    border-radius:0;
+object-fit:cover;
+object-position:center right;
+  }
+
+.banner-gradient{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:auto;
+    height:100%;
+    z-index:1;
+background:linear-gradient(
+  180deg,
+  rgba(255,255,255,0) 0%,
+  rgba(255,255,255,0.2) 40%,
+  rgba(255,255,255,1) 50%,
+  rgba(255,255,255,1) 100%
+);
+    pointer-events:none;
+}
+
+.info{
+    padding:0px 16px 20px;
+max-width:100%;
+}
+
+.info h1{
+font-size:2rem;
+    color: #000;
+margin-top: 0rem;
+}
+
+.info p{
+font-size:0.9rem;
+    color: #000;
+}
+
+  .links a{
+    color: #000;
+  }
 
       #episodeListView ul { 
 padding: 12px 5% 120px;
@@ -174,34 +261,39 @@ font-size:0.95rem;
 margin:0;
  }
 
-      .ep-sub { 
-font-size:0.8rem;
- }
     }
   </style>
 </head>
 
 <body>
-  <header onclick="location.href='practice4.html'">2026 KAHC</header>
+  <header onclick="location.href='index.html'">2026 KAHC</header>
 
-  <div class="wrap">
+<div class="wrap">
+
+  <div class="banner">
+    <div class="banner-img" id="banner"></div>
+    <div class="banner-gradient"></div>
+
     <div class="top-section">
       <div class="info">
         <h1 id="title">제목</h1>
         <p id="author">작가</p>
         <p id="desc">설명</p>
+
         <div class="links">
           <a id="reviewLink" href="#" target="_blank">> 후기 바로가기</a>
           <a id="backupLink" href="#" target="_blank">> 백업 사이트</a>
         </div>
       </div>
-      <div class="banner" id="banner"></div>
     </div>
 
-    <section id="episodeListView">
-      <ul id="episodeList"></ul>
-    </section>
   </div>
+
+  <section id="episodeListView">
+    <ul id="episodeList"></ul>
+  </section>
+
+</div>
 
   <script>
 
@@ -323,11 +415,13 @@ font-size:0.8rem;
         author: "박재은",
         description: "평범한 나날을 보내던 중 친구들이 이상해지기 시작했다.",
         bannerImage: "img/박재은_배너.jpg",
+  gradColor: "rgba(0,0,0,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/박재은_1화_썸네일.jpg",
+            thumbnail: "img/3109박재은_1화_썸네일.jpg",
           }
         ]
       },
@@ -348,7 +442,7 @@ font-size:0.8rem;
 
       "2511": {
         title: "OASIN: 퇴출비상책",
-        authoRequitallr: "서지은",
+        author: "서지은",
         description: "이상현상으로 무너져가는 지구. 무능한 소녀와 날개를 잃은 소년은 좌절을 가로지를 비상을 꿈꾼다.",
         bannerImage: "img/서지은_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -449,6 +543,10 @@ font-size:0.8rem;
         author: "이윤서",
         description: "인조인간은 제 행성에 나타난 과학자를 보고 자신의 기억을 되찾아달라고 한다.",
         bannerImage: "img/이윤서_배너.jpg",
+
+  gradColor: "rgba(91,107,123,1)",
+  textColor: "white",
+
         links: { review: "https://example.com/review/yoonseo", backup: "https://example.com/backup/yoonseo" },
         episodes: [
           {
@@ -458,7 +556,6 @@ font-size:0.8rem;
           {
             title: "2화",
             thumbnail: "img/이윤서_thumb2.jpg",
-            images: ["img/이윤서/2화_001.png","img/이윤서/2화_002.png"]
           },
           {
             title: "3화",
@@ -571,49 +668,187 @@ font-size:0.8rem;
             thumbnail: "img/조연호_1화_썸네일.jpg",
           }
         ]
+      },
+
+      "26": {
+        title: "26기 루키만창",
+        author: "26기 만화창작과",
+        description: "26기 만화창작과들의 단편 학년작품 모음집!",
+        bannerImage: "img/루만_배너.jpg",
+  gradColor: "rgba(255,251,242,1)",
+  textColor: "black",
+        links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+        episodes: [
+          {
+            title: "개과천성 - 김서연",
+            thumbnail: "img/2101김서연 사이트썸네일.jpg",
+  },
+          {
+            title: "해파리 - 김유진",
+            thumbnail: "img/2102 김유진 사이트썸네일.jpg",
+  },
+          {
+            title: "사랑하는 나의 재앙 - 김태리",
+            thumbnail: "img/2103 김태리 사이트썸네일.jpg",
+  },
+          {
+            title: "별 없는 밤 - 김하은",
+            thumbnail: "img/2104김하은 사이트썸네일.jpg",
+  },
+          {
+            title: "천사인데 마왕님께 키워지고 있습니다 - 김현지",
+            thumbnail: "img/2105김현지 노션썸네일.jpg",
+  },
+          {
+            title: "Q. 죽은 사람 살리는 방법은 무엇인가요? - 류현아",
+            thumbnail: "img/2106류현아 사이트썸네일.jpg",
+  },
+          {
+            title: "사랑도 숨길 수 있나요 - 박단비",
+            thumbnail: "img/2107박단비 사이트썸네일.jpg",
+  },
+          {
+            title: "편견의 속도 - 박예진",
+            thumbnail: "img/2108박예진 사이트 썸네일.jpg",
+  },
+          {
+            title: "DANA-I=DISTANCE - 박윤서",
+            thumbnail: "img/2109 박윤서 사이트썸네일.jpg",
+  },
+          {
+            title: "DOLLY - 서영채",
+            thumbnail: "img/2110 서영채 사이트 썸네일.jpg",
+  },
+          {
+            title: "소꿉친구가 외계인일 확률은 - 성지수",
+            thumbnail: "img/2111성지수 사이트썸네일.jpg",
+  },
+          {
+            title: "나를 틔우다 - 신우진",
+            thumbnail: "img/2112신우진 사이트썸네일.jpg",
+  },
+          {
+            title: "Get over&Help - 안다인",
+            thumbnail: "img/2113안다인 사이트썸네일.jpg",
+  },
+          {
+            title: "꿈속의 F양 - 양서정",
+            thumbnail: "img/2114양서정 사이트썸네일.jpg",
+  },
+          {
+            title: "1230321 - 이예지",
+            thumbnail: "img/2115이예지사이트썸네일.jpg",
+  },
+          {
+            title: "대 갸루 시대! - 이지율",
+            thumbnail: "img/2116 이지율 사이트썸네일.jpg",
+  },
+          {
+            title: "베타 - 임서윤",
+            thumbnail: "img/2117 임서윤 사이트섬네일.jpg",
+  },
+          {
+            title: "TT011:morrow - 장은서",
+            thumbnail: "img/2118장은서 사이트썸네일.jpg",
+  },
+          {
+            title: "리켄베커 비너스 - 전선유",
+            thumbnail: "img/2119 전선유 사이트썸네일.jpg",
+  },
+          {
+            title: "당신에게 하고 싶은 말 - 전윤서",
+            thumbnail: "img/2120 전윤서 사이트썸네일.jpg",
+  },
+          {
+            title: "두목님의 생일잔치 - 정주은",
+            thumbnail: "img/2121정주은 사이트썸네일.jpg",
+  },
+          {
+            title: "열전도 - 정지우",
+            thumbnail: "img/2122 정지우 사이트썸네일.jpg",
+  },
+          {
+            title: "VERSUS - 최예서",
+            thumbnail: "img/2123최예서 사이트 썸네일.jpg",
+  },
+          {
+            title: "위와 아래 - 최은오",
+            thumbnail: "img/2124 최은오 사이트썸네일.jpg"
+          }
+        ]
       }
     };
 
     // 작품 id 가져오기 (URL param)
 const params = new URLSearchParams(window.location.search);
-const workId = params.get("workId");
+const workId = params.get("workId") || params.get("id");
 const data = works[workId];
 
     if (!data) {
       document.body.innerHTML = '<p style="padding:2rem;">작품을 찾을 수 없습니다. 올바른 id로 접속했는지 확인하세요.</p>';
-      throw new Error('No work data for id=' + id);
+throw new Error('No work data for id=' + workId);
     }
 
     // 기본 정보 채우기
     document.getElementById('title').textContent = data.title;
     document.getElementById('author').textContent = data.author;
     document.getElementById('desc').textContent = data.description;
-    document.getElementById('banner').innerHTML = data.bannerImage ? `<img src="${data.bannerImage}" alt="배너">` : '';
+    const banner = document.getElementById('banner');
+
+banner.innerHTML = data.bannerImage
+? `<img src="${data.bannerImage}" alt="배너">`
+: '';
     document.getElementById('reviewLink').href = data.links?.review || '#';
     document.getElementById('backupLink').href = data.links?.backup || '#';
 
     // 회차 목록 생성 (index 기준: 0 => 1화)
-    const list = document.getElementById('episodeList');
-    list.innerHTML = '';
-    data.episodes.forEach((ep, index) => {
-      const li = document.createElement('li');
-      const thumbSrc = ep.thumbnail || (ep.images && ep.images[0]) || '';
-      li.innerHTML = `
-        <img src="${thumbSrc}" alt="썸네일">
-        <div class="ep-meta">
-          <div class="ep-title">${ep.title}</div>
-          <div class="ep-sub">회차 ${index + 1}</div>
-        </div>
-      `;
-      li.addEventListener('click', () => {
-        // viewer로 이동: id와 ep(index)를 쿼리로 전달
-location.href = `viewer.html?workId=${encodeURIComponent(workId)}&ep=${index}`;      });
-      list.appendChild(li);
-    });
+const list = document.getElementById('episodeList');
+list.innerHTML = '';
+
+data.episodes.forEach((ep, index) => {
+  const li = document.createElement('li');
+  const thumbSrc = ep.thumbnail || (ep.images && ep.images[0]) || '';
+
+  li.innerHTML = `
+    <img src="${thumbSrc}" alt="썸네일">
+    <div class="ep-meta">
+      <div class="ep-title">${ep.title}</div>
+    </div>
+  `;
+
+  li.addEventListener('click', () => {
+    const bookViewerIds = ['2503', '2520', '26'];
+
+    const viewer = bookViewerIds.includes(workId)
+      ? 'bookviewer.html'
+      : 'viewer.html';
+
+    location.href = `${viewer}?workId=${encodeURIComponent(workId)}&ep=${index}`;
+  });
+
+  list.appendChild(li);
+});
+
+const wrap = document.querySelector(".wrap");
+
+if (data.gradColor) {
+  wrap.style.setProperty("--grad-color", data.gradColor);
+}
+
+if (data.textColor === "white") {
+  wrap.style.setProperty("--text-color", "white");
+  wrap.style.setProperty("--subtext-color", "white");
+  wrap.style.setProperty("--link-color", "white");
+} else {
+  wrap.style.setProperty("--text-color", "#000");
+  wrap.style.setProperty("--subtext-color", "#000");
+  wrap.style.setProperty("--link-color", "#000");
+}
 
     // (선택) 앞으로 추가/관리할 때:
     // - 새 작품 추가: works['새id'] = { title, author, description, bannerImage, links, episodes: [...] }
     // - 새 회차 추가: works['2518'].episodes.push({ title, thumbnail, images: [...] })
+
   </script>
 </body>
 </html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>출판만화 뷰어</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      color: #111;
+      font-family: 'Nanum Gothic', serif;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+    }
+
+    .viewer-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      z-index: 1000;
+      transition: transform 0.25s ease;
+    }
+
+    .viewer-bar.hidden {
+      transform: translateY(-100%);
+    }
+
+    .viewer-bar .title {
+      flex: 1;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .viewer-bar button,
+    .nav-bottom button {
+      background: none;
+      border: 0;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #111;
+    }
+
+    .viewer-bar .side {
+      width: 48px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+.stage {
+  position: fixed;
+  inset: 0;
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+}
+
+/* 실제 페이지가 들어가는 영역: 상단/하단 바를 뺀 높이 */
+.spread-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.spread {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  background: #fff;
+}
+
+.page-slot {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  background: #fff;
+}
+
+.page-slot.single {
+  width: auto;
+  justify-content: center;
+}
+
+.page-slot.double {
+  flex: 0 0 50%;
+  width: 50%;
+}
+
+/* 양면일 때 왼쪽 칸 이미지는 가운데(오른쪽)로 붙임 */
+.page-slot.double:first-child {
+  justify-content: flex-end;
+}
+
+/* 양면일 때 오른쪽 칸 이미지는 가운데(왼쪽)로 붙임 */
+.page-slot.double:last-child {
+  justify-content: flex-start;
+}
+
+.page-slot img {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+    .nav-bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      border-top: 1px solid #eee;
+      z-index: 1000;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-bottom.hidden {
+      transform: translateY(100%);
+    }
+
+    .nav-bottom button {
+      padding: 0.45rem 0.8rem;
+      border-radius: 6px;
+    }
+
+    .nav-bottom button:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+.tap-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+}
+
+    .tap-zone.left {
+      left: 0;
+      width: 25%;
+    }
+
+    .tap-zone.center {
+      left: 25%;
+      width: 50%;
+    }
+
+    .tap-zone.right {
+      right: 0;
+      width: 25%;
+    }
+
+    .page-indicator {
+      position: fixed;
+      right: 14px;
+      bottom: 74px;
+      z-index: 900;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #eee;
+      border-radius: 999px;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .page-indicator.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+@media (orientation: portrait) {
+  .spread {
+    gap: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page-slot.single {
+    width: 100%;
+    flex: 0 0 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page-slot.single img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: none;
+    object-fit: contain;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="viewer-bar" id="viewerBar">
+    <button id="btnBack" class="side">←</button>
+    <div class="title" id="viewerTitle">제목</div>
+    <div class="side"></div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="spread-wrap">
+      <div class="spread" id="spread"></div>
+
+      <div class="tap-zone left" id="tapLeft"></div>
+      <div class="tap-zone center" id="tapCenter"></div>
+      <div class="tap-zone right" id="tapRight"></div>
+    </div>
+  </div>
+
+  <div class="page-indicator" id="pageIndicator"></div>
+
+  <div class="nav-bottom" id="navBottom">
+    <button id="prevEpBtn">이전화</button>
+    <button id="listBtn">목록</button>
+    <button id="nextEpBtn">다음화</button>
+  </div>
+
+  <script>
+    const works = {
+      "2503": {
+        title: "어제 죽은 마요이양",
+        episodes: [
+          { title: "1화",
+            images: ["img/3109박재은_1화_001.webp","img/3109박재은_1화_002.webp","img/3109박재은_1화_003.webp","img/3109박재은_1화_004.webp","img/3109박재은_1화_005.webp","img/3109박재은_1화_006.webp","img/3109박재은_1화_007.webp","img/3109박재은_1화_008.webp","img/3109박재은_1화_009.webp","img/3109박재은_1화_010.webp","img/3109박재은_1화_011.webp","img/3109박재은_1화_012.webp","img/3109박재은_1화_013.webp","img/3109박재은_1화_014.webp","img/3109박재은_1화_015.webp","img/3109박재은_1화_016.webp","img/3109박재은_1화_017.webp","img/3109박재은_1화_018.webp","img/3109박재은_1화_019.webp"]
+          }
+        ]
+      },
+
+      "2520": {
+        title: "異重豫定論:여명의 구원자",
+        episodes: [
+          { title: "1화",
+            images: ["img/3109박재은_1화_001.webp","img/3109박재은_1화_002.webp","img/3109박재은_1화_003.webp","img/3109박재은_1화_004.webp","img/3109박재은_1화_005.webp","img/3109박재은_1화_006.webp","img/3109박재은_1화_007.webp","img/3109박재은_1화_008.webp","img/3109박재은_1화_009.webp","img/3109박재은_1화_010.webp","img/3109박재은_1화_011.webp","img/3109박재은_1화_012.webp","img/3109박재은_1화_013.webp","img/3109박재은_1화_014.webp","img/3109박재은_1화_015.webp","img/3109박재은_1화_016.webp","img/3109박재은_1화_017.webp","img/3109박재은_1화_018.webp","img/3109박재은_1화_019.webp"]
+          }
+        ]
+      },
+
+      "26": {
+        title: "26기 루키만창",
+        episodes: [
+          { title: "개과천성 - 김서연",
+            images: ["img/2101김서연_001.webp","img/2101김서연_002.webp","img/2101김서연_003.webp","img/2101김서연_004.webp","img/2101김서연_005.webp","img/2101김서연_006.webp","img/2101김서연_007.webp","img/2101김서연_008.webp","img/2101김서연_009.webp","img/2101김서연_010.webp","img/2101김서연_011.webp","img/2101김서연_012.webp"]
+          },
+          { title: "해파리 - 김유진",
+            images: ["img/2102 김유진_001.webp","img/2102 김유진_002.webp","img/2102 김유진_003.webp","img/2102 김유진_004.webp","img/2102 김유진_005.webp","img/2102 김유진_006.webp","img/2102 김유진_007.webp","img/2102 김유진_008.webp","img/2102 김유진_009.webp","img/2102 김유진_010.webp","img/2102 김유진_011.webp","img/2102 김유진_012.webp"]
+          },
+          { title: "사랑하는 나의 재앙 - 김태리",
+            images: ["img/2103김태리_001.webp","img/2103김태리_002.webp","img/2103김태리_003.webp","img/2103김태리_004.webp","img/2103김태리_005.webp","img/2103김태리_006.webp","img/2103김태리_007.webp","img/2103김태리_008.webp","img/2103김태리_009.webp","img/2103김태리_010.webp","img/2103김태리_011.webp","img/2103김태리_012.webp"]
+          },
+          { title: "별 없는 밤 - 김하은",
+            images: ["img/2104김하은_001.webp","img/2104김하은_002.webp","img/2104김하은_003.webp","img/2104김하은_004.webp","img/2104김하은_005.webp","img/2104김하은_006.webp","img/2104김하은_007.webp","img/2104김하은_008.webp","img/2104김하은_009.webp","img/2104김하은_010.webp","img/2104김하은_011.webp","img/2104김하은_012.webp"]
+          },
+          { title: "천사인데 마왕님께 키워지고 있습니다 - 김현지",
+            images: ["img/2105김현지_001.webp","img/2105김현지_002.webp","img/2105김현지_003.webp","img/2105김현지_004.webp","img/2105김현지_005.webp","img/2105김현지_006.webp","img/2105김현지_007.webp","img/2105김현지_008.webp","img/2105김현지_009.webp","img/2105김현지_010.webp","img/2105김현지_011.webp","img/2105김현지_012.webp"]
+          },
+          { title: "Q. 죽은 사람 살리는 방법은 무엇인가요? - 류현아",
+            images: ["img/2106류현아_001.webp","img/2106류현아_002.webp","img/2106류현아_003.webp","img/2106류현아_004.webp","img/2106류현아_005.webp","img/2106류현아_006.webp","img/2106류현아_007.webp","img/2106류현아_008.webp","img/2106류현아_009.webp","img/2106류현아_010.webp","img/2106류현아_011.webp","img/2106류현아_012.webp"]
+          },
+          { title: "사랑도 숨길 수 있나요 - 박단비",
+            images: ["img/2107박단비_001.webp","img/2107박단비_002.webp","img/2107박단비_003.webp","img/2107박단비_004.webp","img/2107박단비_005.webp","img/2107박단비_006.webp","img/2107박단비_007.webp","img/2107박단비_008.webp","img/2107박단비_009.webp","img/2107박단비_010.webp","img/2107박단비_011.webp","img/2107박단비_012.webp"]
+          },
+          { title: "편견의 속도 - 박예진",
+            images: ["img/2108박예진_001.webp","img/2108박예진_002.webp","img/2108박예진_003.webp","img/2108박예진_004.webp","img/2108박예진_005.webp","img/2108박예진_006.webp","img/2108박예진_007.webp","img/2108박예진_008.webp","img/2108박예진_009.webp","img/2108박예진_010.webp","img/2108박예진_011.webp","img/2108박예진_012.webp"]
+          },
+          { title: "DANA-I=DISTANCE - 박윤서",
+            images: ["img/2109박윤서_001.webp","img/2109박윤서_002.webp","img/2109박윤서_003.webp","img/2109박윤서_004.webp","img/2109박윤서_005.webp","img/2109박윤서_006.webp","img/2109박윤서_007.webp","img/2109박윤서_008.webp","img/2109박윤서_009.webp","img/2109박윤서_010.webp","img/2109박윤서_011.webp","img/2109박윤서_012.webp"]
+          },
+          { title: "DOLLY - 서영채",
+            images: ["img/2110서영채_001.webp","img/2110서영채_002.webp","img/2110서영채_003.webp","img/2110서영채_004.webp","img/2110서영채_005.webp","img/2110서영채_006.webp","img/2110서영채_007.webp","img/2110서영채_008.webp","img/2110서영채_009.webp","img/2110서영채_010.webp","img/2110서영채_011.webp","img/2110서영채_012.webp"]
+          },
+          { title: "소꿉친구가 외계인일 확률은 - 성지수",
+            images: ["img/2111성지수_루만_01.webp","img/2111성지수_루만_02.webp","img/2111성지수_루만_03.webp","img/2111성지수_루만_04.webp","img/2111성지수_루만_05.webp","img/2111성지수_루만_06.webp","img/2111성지수_루만_07.webp","img/2111성지수_루만_08.webp","img/2111성지수_루만_09.webp","img/2111성지수_루만_10.webp","img/2111성지수_루만_11.webp","img/2111성지수_루만_12.webp"]
+          },
+          { title: "나를 틔우다 - 신우진",
+            images: ["img/2112신우진_01.webp","img/2112신우진_02.webp","img/2112신우진_03.webp","img/2112신우진_04.webp","img/2112신우진_05.webp","img/2112신우진_06.webp","img/2112신우진_07.webp","img/2112신우진_08.webp","img/2112신우진_09.webp","img/2112신우진_10.webp","img/2112신우진_11.webp","img/2112신우진_12.webp"]
+          },
+          { title: "Get over&Help - 안다인",
+            images: ["img/compressed-1113안다인_루만01_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만02_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만03_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만04_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만05_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만06_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만07_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만08_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만09_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만10_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만11_compressed_compressed_compressed_compressed.webp","img/compressed-1113안다인_루만12_compressed_compressed_compressed_compressed.webp"]
+          },
+          { title: "꿈속의 F양 - 양서정",
+            images: ["img/compressed-1114양서정_01.webp","img/compressed-1114양서정_02.webp","img/compressed-1114양서정_03_compressed.webp","img/compressed-1114양서정_04_compressed.webp","img/compressed-1114양서정_05_compressed.webp","img/compressed-1114양서정_06_compressed.webp","img/compressed-1114양서정_07_compressed.webp","img/compressed-1114양서정_08_compressed.webp","img/compressed-1114양서정_09_compressed.webp","img/compressed-1114양서정_10_compressed.webp","img/compressed-1114양서정_11_compressed.webp","img/compressed-1114양서정_12_compressed.webp"]
+          },
+          { title: "1230321 - 이예지",
+            images: ["img/2115이예지_001.webp","img/2115이예지_002.webp","img/2115이예지_003.webp","img/2115이예지_004.webp","img/2115이예지_005.webp","img/2115이예지_006.webp","img/2115이예지_007.webp","img/2115이예지_008.webp","img/2115이예지_009.webp","img/2115이예지_010.webp","img/2115이예지_011.webp","img/2115이예지_012.webp"]
+          },
+          { title: "대 갸루 시대! - 이지율",
+            images: ["img/1116이지율_루만01.webp","img/1116이지율_루만02.webp","img/1116이지율_루만03.webp","img/1116이지율_루만04.webp","img/1116이지율_루만05.webp","img/1116이지율_루만06.webp","img/1116이지율_루만07.webp","img/1116이지율_루만08.webp","img/1116이지율_루만09.webp","img/1116이지율_루만10.webp","img/1116이지율_루만11.webp","img/1116이지율_루만12.webp"]
+          },
+          { title: "베타 - 임서윤",
+            images: ["img/2117임서윤_01.webp","img/2117임서윤_02.webp","img/2117임서윤_03.webp","img/2117임서윤_04.webp","img/2117임서윤_05.webp","img/2117임서윤_06.webp","img/2117임서윤_07.webp","img/2117임서윤_08.webp","img/2117임서윤_09.webp","img/2117임서윤_10.webp","img/2117임서윤_11.webp","img/2117임서윤_12.webp"]
+          },
+          { title: "TT011:morrow - 장은서",
+            images: ["img/2118장은서_001.webp","img/2118장은서_002.webp","img/2118장은서_003.webp","img/2118장은서_004.webp","img/2118장은서_005.webp","img/2118장은서_006.webp","img/2118장은서_007.webp","img/2118장은서_008.webp","img/2118장은서_009.webp","img/2118장은서_010.webp","img/2118장은서_011.webp","img/2118장은서_012.webp"]
+          },
+          { title: "리켄베커 비너스 - 전선유",
+            images: ["img/2119전선유_001.webp","img/2119전선유_002.webp","img/2119전선유_003.webp","img/2119전선유_004.webp","img/2119전선유_005.webp","img/2119전선유_006.webp","img/2119전선유_007.webp","img/2119전선유_008.webp","img/2119전선유_009.webp","img/2119전선유_010.webp","img/2119전선유_011.webp","img/2119전선유_012.webp"]
+          },
+          { title: "당신에게 하고 싶은 말 - 전윤서",
+            images: ["img/2120전윤서_001.webp","img/2120전윤서_002.webp","img/2120전윤서_003.webp","img/2120전윤서_004.webp","img/2120전윤서_005.webp","img/2120전윤서_006.webp","img/2120전윤서_007.webp","img/2120전윤서_008.webp","img/2120전윤서_009.webp","img/2120전윤서_010.webp","img/2120전윤서_011.webp","img/2120전윤서_012.webp"]
+          },
+          { title: "두목님의 생일잔치 - 정주은",
+            images: ["img/1121정주은_001.webp","img/1121정주은_002.webp","img/1121정주은_003.webp","img/1121정주은_004.webp","img/1121정주은_005.webp","img/1121정주은_006.webp","img/1121정주은_007.webp","img/1121정주은_008.webp","img/1121정주은_009.webp","img/1121정주은_010.webp","img/1121정주은_011.webp","img/1121정주은_012.webp"]
+          },
+          { title: "열전도 - 정지우",
+            images: ["img/compressed-2122정지우_001.webp","img/compressed-2122정지우_002.webp","img/compressed-2122정지우_003.webp","img/compressed-2122정지우_004.webp","img/compressed-2122정지우_005.webp","img/compressed-2122정지우_006.webp","img/compressed-2122정지우_007.webp","img/compressed-2122정지우_008.webp","img/compressed-2122정지우_009.webp","img/compressed-2122정지우_010.webp","img/compressed-2122정지우_011.webp","img/compressed-2122정지우_012.webp"]
+          },
+          { title: "VERSUS - 최예서",
+            images: ["img/1123최예서_001.webp","img/1123최예서_002.webp","img/1123최예서_003.webp","img/1123최예서_004.webp","img/1123최예서_005.webp","img/1123최예서_006.webp","img/1123최예서_007.webp","img/1123최예서_008.webp","img/1123최예서_009.webp","img/1123최예서_010.webp","img/1123최예서_011.webp","img/1123최예서_012.webp"]
+          },
+          { title: "위와 아래 - 최은오",
+            images: ["img/1124최은오_001.webp","img/1124최은오_002.webp","img/1124최은오_003.webp","img/1124최은오_004.webp","img/1124최은오_005.webp","img/1124최은오_006.webp","img/1124최은오_007.webp","img/1124최은오_008.webp","img/1124최은오_009.webp","img/1124최은오_010.webp","img/1124최은오_011.webp","img/1124최은오_012.webp"]
+          }
+        ]
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('workId');
+    let ep = parseInt(params.get('ep') || '0', 10);
+    let page = parseInt(params.get('page') || '0', 10);
+
+    const data = works[id];
+
+    if (!data) {
+      document.body.innerHTML = `
+        <div style="padding:2rem; font-family:sans-serif;">
+          잘못된 작품입니다.
+        </div>
+      `;
+      throw new Error('No work data for id=' + id);
+    }
+
+    // 우철(오른쪽 방향 넘김)로 볼 회차 설정
+    // 형식: 작품id: [회차인덱스, 회차인덱스]
+    const rightBindingEpisodes = {
+      '2503': [0],
+      '2520': [0, 1],
+      '26': [7, 11]
+    };
+
+    const viewerBar = document.getElementById('viewerBar');
+    const navBottom = document.getElementById('navBottom');
+    const viewerTitle = document.getElementById('viewerTitle');
+    const spread = document.getElementById('spread');
+    const pageIndicator = document.getElementById('pageIndicator');
+
+    const prevEpBtn = document.getElementById('prevEpBtn');
+    const nextEpBtn = document.getElementById('nextEpBtn');
+    const listBtn = document.getElementById('listBtn');
+    const btnBack = document.getElementById('btnBack');
+
+    const tapLeft = document.getElementById('tapLeft');
+    const tapCenter = document.getElementById('tapCenter');
+    const tapRight = document.getElementById('tapRight');
+
+    let isBarVisible = true;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    function isPortraitLike() {
+      return window.innerHeight > window.innerWidth;
+    }
+
+    function getPagesPerView() {
+      return isPortraitLike() ? 1 : 2;
+    }
+
+    function isRightBindingEpisode() {
+      const list = rightBindingEpisodes[id] || [];
+      return list.includes(ep);
+    }
+
+    function getEpisode() {
+      return data.episodes[ep];
+    }
+
+    function getTotalPages() {
+      return getEpisode().images.length;
+    }
+
+    function getStep() {
+      return getPagesPerView();
+    }
+
+function clampPage(value) {
+  const totalPages = getTotalPages();
+
+  if (totalPages <= 0) return 0;
+
+  return Math.max(0, Math.min(value, totalPages - 1));
+}
+
+function getVisiblePages() {
+  const episode = getEpisode();
+  const pagesPerView = getPagesPerView();
+  const total = episode.images.length;
+  page = clampPage(page);
+
+  if (pagesPerView === 1) {
+    return [page];
+  }
+
+  const isRightBinding = isRightBindingEpisode();
+
+  // 첫 펼침
+  if (page === 0) {
+    if (isRightBinding) {
+      // 우철: 첫 페이지가 왼쪽
+      return [0, null];
+    } else {
+      // 좌철: 첫 페이지가 오른쪽
+      return [null, 0];
+    }
+  }
+
+  // 두 번째 펼침부터
+  if (isRightBinding) {
+    // 우철: 오른쪽에서 왼쪽으로 읽음
+    const rightPage = page;
+    const leftPage = page + 1;
+
+    return [
+      leftPage < total ? leftPage : null,
+      rightPage < total ? rightPage : null
+    ];
+  } else {
+    // 좌철: 왼쪽에서 오른쪽으로 읽음
+    const leftPage = page;
+    const rightPage = page + 1;
+
+    return [
+      leftPage < total ? leftPage : null,
+      rightPage < total ? rightPage : null
+    ];
+  }
+}
+
+    function makePageSlot(src, alt, mode) {
+      const slot = document.createElement('div');
+      slot.className = `page-slot ${mode}`;
+
+      if (src) {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = alt;
+        slot.appendChild(img);
+      }
+
+      return slot;
+    }
+
+    function updateTitle() {
+      const episode = getEpisode();
+      viewerTitle.textContent = `${data.title} · ${episode.title}`;
+    }
+
+    function updateEpisodeButtons() {
+      prevEpBtn.disabled = ep <= 0;
+      nextEpBtn.disabled = ep >= data.episodes.length - 1;
+    }
+
+    function updatePageIndicator() {
+      const totalPages = getTotalPages();
+      const pagesPerView = getPagesPerView();
+
+      if (pagesPerView === 1) {
+        pageIndicator.textContent = `${page + 1} / ${totalPages}`;
+        return;
+      }
+
+      const spreadIndex = Math.floor(page / 2) + 1;
+      const totalSpreads = Math.ceil(totalPages / 2);
+      pageIndicator.textContent = `${spreadIndex} / ${totalSpreads}`;
+    }
+
+    function updateHistory() {
+      history.replaceState(
+        { id, ep, page },
+        '',
+        `bookviewer.html?workId=${encodeURIComponent(id)}&ep=${ep}&page=${page}`
+      );
+    }
+
+    function renderSpread() {
+      const episode = getEpisode();
+      const pagesPerView = getPagesPerView();
+      const visiblePages = getVisiblePages();
+
+      spread.innerHTML = '';
+      updateTitle();
+      updateEpisodeButtons();
+      updatePageIndicator();
+
+      if (pagesPerView === 1) {
+        const index = visiblePages[0];
+        const src = episode.images[index];
+        spread.appendChild(
+          makePageSlot(src, `${episode.title} ${index + 1}p`, 'single')
+        );
+      } else {
+        visiblePages.forEach((index) => {
+          const src = index === null ? null : episode.images[index];
+          const alt = index === null ? '' : `${episode.title} ${index + 1}p`;
+          spread.appendChild(
+            makePageSlot(src, alt, 'double')
+          );
+        });
+      }
+
+      updateHistory();
+    }
+
+let nextEpisodeTimeout = null;
+let nextEpisodeToast = null;
+
+function showNextEpisodeToast() {
+  if (nextEpisodeToast) {
+    nextEpisodeToast.remove();
+  }
+
+  nextEpisodeToast = document.createElement('div');
+  nextEpisodeToast.textContent = '3초 후 다음 화로 이동합니다';
+  nextEpisodeToast.style.position = 'fixed';
+  nextEpisodeToast.style.left = '50%';
+  nextEpisodeToast.style.bottom = '50%';
+  nextEpisodeToast.style.transform = 'translateX(-50%)';
+  nextEpisodeToast.style.padding = '10px 16px';
+  nextEpisodeToast.style.background = 'rgba(255, 255, 255, 0.8)';
+  nextEpisodeToast.style.color = '#000';
+  nextEpisodeToast.style.fontSize = '14px';
+  nextEpisodeToast.style.borderRadius = '10px';
+  nextEpisodeToast.style.zIndex = '3000';
+  nextEpisodeToast.style.pointerEvents = 'none';
+
+  document.body.appendChild(nextEpisodeToast);
+}
+
+function clearNextEpisodeToast() {
+  if (nextEpisodeTimeout) {
+    clearTimeout(nextEpisodeTimeout);
+    nextEpisodeTimeout = null;
+  }
+
+  if (nextEpisodeToast) {
+    nextEpisodeToast.remove();
+    nextEpisodeToast = null;
+  }
+}
+
+function goNextPage() {
+  const total = getTotalPages();
+  const pagesPerView = getPagesPerView();
+
+  let next;
+
+  if (pagesPerView === 1) {
+    next = clampPage(page + 1);
+  } else {
+    next = page === 0 ? 1 : page + 2;
+  }
+
+  // 다음 페이지가 있으면 그냥 넘김
+  if (next < total && next !== page) {
+    clearNextEpisodeToast();
+    page = next;
+    renderSpread();
+    return;
+  }
+
+  // 마지막 페이지에서 한 번 더 넘긴 경우
+  if (ep < data.episodes.length - 1) {
+    // 이미 3초 대기 중인데 또 누르면 바로 다음 화
+    if (nextEpisodeTimeout) {
+      clearNextEpisodeToast();
+      goNextEpisode();
+      return;
+    }
+
+    showNextEpisodeToast();
+
+    nextEpisodeTimeout = setTimeout(() => {
+      clearNextEpisodeToast();
+      goNextEpisode();
+    }, 3000);
+  }
+}
+
+function goPrevPage() {
+  clearNextEpisodeToast();
+  const pagesPerView = getPagesPerView();
+
+  if (pagesPerView === 1) {
+    const prev = clampPage(page - 1);
+    if (prev !== page) {
+      page = prev;
+      renderSpread();
+    }
+    return;
+  }
+
+  const prev = page <= 1 ? 0 : page - 2;
+
+  if (prev !== page) {
+    page = prev;
+    renderSpread();
+  }
+}
+    function goNextEpisode() {
+  clearNextEpisodeToast();
+      if (ep < data.episodes.length - 1) {
+        ep += 1;
+        page = 0;
+        renderSpread();
+      }
+    }
+
+    function goPrevEpisode() {
+  clearNextEpisodeToast();
+      if (ep > 0) {
+        ep -= 1;
+        page = 0;
+        renderSpread();
+      }
+    }
+
+    function toggleBars(force) {
+      const show = force === undefined ? !isBarVisible : force;
+
+      if (show) {
+        viewerBar.classList.remove('hidden');
+        navBottom.classList.remove('hidden');
+        pageIndicator.classList.remove('hidden');
+        isBarVisible = true;
+      } else {
+        viewerBar.classList.add('hidden');
+        navBottom.classList.add('hidden');
+        pageIndicator.classList.add('hidden');
+        isBarVisible = false;
+      }
+    }
+
+// 탭 동작
+// 좌철: 왼쪽 탭 = 이전 / 오른쪽 탭 = 다음
+// 우철: 왼쪽 탭 = 다음 / 오른쪽 탭 = 이전
+tapLeft.addEventListener('click', () => {
+  if (isRightBindingEpisode()) {
+    goNextPage();
+  } else {
+    goPrevPage();
+  }
+});
+
+tapRight.addEventListener('click', () => {
+  if (isRightBindingEpisode()) {
+    goPrevPage();
+  } else {
+    goNextPage();
+  }
+});
+
+    tapCenter.addEventListener('click', () => {
+      toggleBars();
+    });
+
+    // 스와이프
+    document.getElementById('stage').addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+    }, { passive: true });
+
+    document.getElementById('stage').addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (absX < 30 || absX < absY) return;
+
+      const rightBinding = isRightBindingEpisode();
+
+      if (rightBinding) {
+        // 우철: 오른쪽으로 스와이프하면 다음
+        if (dx > 0) {
+          goNextPage();
+        } else {
+          goPrevPage();
+        }
+      } else {
+        // 일반: 왼쪽으로 스와이프하면 다음
+        if (dx < 0) {
+          goNextPage();
+        } else {
+          goPrevPage();
+        }
+      }
+    }, { passive: true });
+
+// 방향키
+window.addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+
+  const rightBinding = isRightBindingEpisode();
+
+  if (rightBinding) {
+    // 우철: 왼쪽 화살표 = 다음 / 오른쪽 화살표 = 이전
+    if (e.key === 'ArrowLeft') {
+      goNextPage();
+    } else if (e.key === 'ArrowRight') {
+      goPrevPage();
+    }
+  } else {
+    // 좌철: 오른쪽 화살표 = 다음 / 왼쪽 화살표 = 이전
+    if (e.key === 'ArrowRight') {
+      goNextPage();
+    } else if (e.key === 'ArrowLeft') {
+      goPrevPage();
+    }
+  }
+});
+
+    prevEpBtn.addEventListener('click', goPrevEpisode);
+    nextEpBtn.addEventListener('click', goNextEpisode);
+
+    listBtn.addEventListener('click', () => {
+      location.href = `page1.html?workId=${encodeURIComponent(id)}`;
+    });
+
+    btnBack.addEventListener('click', () => {
+      if (document.referrer && document.referrer.includes('page1.html')) {
+        history.back();
+      } else {
+        location.href = `page1.html?workId=${encodeURIComponent(id)}`;
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      page = clampPage(page);
+      renderSpread();
+    });
+
+    window.addEventListener('popstate', (e) => {
+      const state = e.state;
+
+      if (state && state.id === id) {
+        ep = typeof state.ep === 'number' ? state.ep : ep;
+        page = typeof state.page === 'number' ? state.page : 0;
+        renderSpread();
+      } else {
+        location.href = `page1.html?workId=${encodeURIComponent(id)}`;
+      }
+    });
+
+    ep = Math.max(0, Math.min(ep, data.episodes.length - 1));
+    page = clampPage(page);
+    renderSpread();
+  </script>
+</body>
+</html>

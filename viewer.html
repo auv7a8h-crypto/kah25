@@ -34,7 +34,7 @@ background: #fff; z-index:1000; border-bottom:1px solid #eee;
 
     #episodeImages { padding-top:64px; padding-bottom:64px; max-width:900px; margin:0 auto; }
 
-    #episodeImages img { width:100%; max-width:900px; display:block; margin:0 auto 24px; }
+    #episodeImages img { width:100%; max-width:900px; display:block; margin:0px; }
     .nav-bottom {
       position: fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:1rem; padding:0.6rem 1rem;
       background: #fff; border-top:1px solid #eee; z-index:1000;
@@ -43,7 +43,7 @@ background: #fff; z-index:1000; border-bottom:1px solid #eee;
     .nav-bottom button:disabled { opacity:0.5; cursor:default; }
     @media screen and (max-width:768px) {
       #episodeImages { padding-top:56px; padding-bottom:56px; }
-      #episodeImages img { margin-bottom:16px; }
+      #episodeImages img { margin-bottom:0px; }
     }
 
 /* 상단/하단 바에 부드러운 애니메이션 효과 추가 */
@@ -119,6 +119,15 @@ background: #fff; z-index:1000; border-bottom:1px solid #eee;
   <script>
 
     const works = {
+      "2509": {
+        title: "심정",
+        episodes: [
+          { title: "1화",
+            images: ["img/3109박재은_1화_001.webp","img/3109박재은_1화_002.webp","img/3109박재은_1화_003.webp","img/3109박재은_1화_004.webp","img/3109박재은_1화_005.webp","img/3109박재은_1화_006.webp","img/3109박재은_1화_007.webp","img/3109박재은_1화_008.webp","img/3109박재은_1화_009.webp","img/3109박재은_1화_010.webp","img/3109박재은_1화_011.webp","img/3109박재은_1화_012.webp","img/3109박재은_1화_013.webp","img/3109박재은_1화_014.webp","img/3109박재은_1화_015.webp","img/3109박재은_1화_016.webp","img/3109박재은_1화_017.webp","img/3109박재은_1화_018.webp","img/3109박재은_1화_019.webp"]
+          }
+        ]
+      },
+
       "2508": {
         title: "HIBERNATION",
         episodes: [
@@ -178,7 +187,7 @@ document.getElementById('viewerTitle').textContent = episode.title;
       });
 
       updateNav();
-      history.replaceState({ id, ep: ep }, '', `viewer.html?id=${encodeURIComponent(id)}&ep=${ep}`);
+history.replaceState({ id, ep: ep }, '', `viewer.html?workId=${encodeURIComponent(id)}&ep=${ep}`);
     }
 
     function updateNav() {
@@ -193,13 +202,7 @@ document.getElementById('prevBtn').addEventListener('click', () => {
 document.getElementById('nextBtn').addEventListener('click', () => {
       if (ep < data.episodes.length - 1) { renderEpisode(ep + 1); window.scrollTo({ top: 0, behavior: 'instant' }); }
     });
-  document.getElementById('btnBack').addEventListener('click', () => {
-      if (document.referrer && document.referrer.includes('page1.html')) {
-        history.back();
-      } else {
-location.href = `viewer.html?id=${encodeURIComponent(workId)}&ep=${index}`;
-      }
-    });
+
 
 
     window.addEventListener('popstate', (e) => {
@@ -207,7 +210,7 @@ location.href = `viewer.html?id=${encodeURIComponent(workId)}&ep=${index}`;
       if (state && state.id === id && typeof state.ep === 'number') {
         renderEpisode(state.ep);
       } else {
-        location.href = `page1.html?id=${encodeURIComponent(id)}`;
+location.href = `page1.html?workId=${encodeURIComponent(id)}`;
       }
     });
 
