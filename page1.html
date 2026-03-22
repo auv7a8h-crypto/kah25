@@ -33,21 +33,13 @@ solid #eee;
  }
 
     .wrap { 
-max-width:1200px; 
-margin:0 auto;
+width:1200px; 
+margin:20px auto;
  }
-
-.top-section{
-  position:relative;
-  z-index:2;
-  height:100%;
-  display:flex;
-  align-items:center;
-}
 
 .banner{
   position:relative;
-  height:260px;
+  height:330px;
   background:#e5e5e5;
   overflow:hidden;
 
@@ -76,33 +68,56 @@ margin:0 auto;
     90deg,
     var(--grad-color) 0%,
     var(--grad-color) 50%,
-    transparent 70%
+    transparent 60%
   );
   pointer-events:none;
 }
 
+.top-section{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  align-items: flex-start;
+  padding-left:50px;
+  padding-top:50px;
+}
+
 .info{
-  padding-left:60px;
-  max-width:600px;
+  max-width:500px;
+  max-height:300px;
 }
 
     .info h1 { 
-
-margin: 0 0 0.5rem 0; 
+margin: 0 0 0 0; 
 word-break:break-word;
-font-size: 3rem; 
+font-size: 3.2rem; 
 color: var(--text-color);
+  line-height: 1.2;
  }
 
-    .info p { 
-margin: 1rem 0; 
+#author { 
+margin: 0.2rem 0 0 0; 
+font-size: 1.2rem; 
+  color:var(--subtext-color);
+ }
+
+#desc { 
 font-size: 0.9rem; 
   color:var(--subtext-color);
+  position: absolute;
+  top: 180px;
+  left: 50px;
+  max-width: 400px;
  }
 
     .links { 
 margin-top: 0.75rem;
-
+  align-items: flex-end;
+  position: absolute;
+  bottom: 40px;
+  left: 50px;
+  max-width: 400px;
  }
 
     .links a { 
@@ -301,19 +316,21 @@ margin:0;
       "2501": {
         title: "Requitall",
         author: "권예승",
-        description: "나카하라츄야, 루카카네시로, 그리고 빈센트 렛츠고",
+        description: "알고 싶지 않아 모르는척했다.",
         bannerImage: "img/권예승_배너.jpg",
+  gradColor: "rgba(240,220,209,1)",
+  textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/권예승_1화_썸네일.jpg",
+            thumbnail: "img/3101권예승_1화_썸네일.jpg",
           }
         ]
       },
 
       "2502": {
-        title: "壽命換錢所: 수명환전소",
+        title: "수명환전소",
         author: "김다솔",
         description: "당신의 수명을 소원으로 환전해드립니다. 당신의 소원은 무엇인가요? 이런, 오류가 발생했네요.",
         bannerImage: "img/김다솔_배너.jpg",
@@ -321,21 +338,23 @@ margin:0;
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/김다솔_1화_썸네일.jpg",
+            thumbnail: "img/3102김다솔_1화_썸네일.jpg",
           }
         ]
       },
 
       "2503": {
         title: "어제 죽은 마요이양",
-        author: "김민혁",
+        author: "にょく",
         description: "rip",
         bannerImage: "img/김민혁_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(230,238,240,1)",
+  textColor: "black",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/김민혁_1화_썸네일.jpg",
+            thumbnail: "img/3103김민혁_1화_썸네일.jpg",
           }
         ]
       },
@@ -343,13 +362,13 @@ margin:0;
       "2504": {
         title: "마법소녀 출입금지",
         author: "김예진",
-        description: "나는 이제 눈에 봬는게 없다고!",
+        description: "마법 소녀가 되고 싶다고 생각한 적 없다면 거짓말이겠지만, 이런 방법을 원한 건 아니었어..!",
         bannerImage: "img/김예진_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/김예진_1화_썸네일.jpg",
+            thumbnail: "img/3104김예진_1화_썸네일.jpg",
           }
         ]
       },
@@ -360,10 +379,12 @@ margin:0;
         description: "폭풍이 나를 집어 삼킨 뒤 바다는 나를 선택했다. 바다는 내가 인어를 사냥해도 여전히 사랑해줄까?",
         bannerImage: "img/김윤아_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(201,250,255,1)",
+  textColor: "black",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/김윤아_1화_썸네일.jpg",
+            thumbnail: "img/3105김윤아_1화_썸네일.jpg",
           }
         ]
       },
@@ -371,13 +392,15 @@ margin:0;
       "2506": {
         title: "사랑이 이상해",
         author: "김지원",
-        description: "나카하라츄야, 루카카네시로, 그리고 빈센트 렛츠고",
+        description: "아버지! 저희의 결혼을 허락해 주세요!",
         bannerImage: "img/김지원_배너.jpg",
+  gradColor: "rgba(255,228,241,1)",
+  textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/김지원_1화_썸네일.jpg",
+            thumbnail: "img/3106김지원_1화_썸네일.jpg",
           }
         ]
       },
@@ -388,10 +411,12 @@ margin:0;
         description: "겁쟁이+토마토=?",
         bannerImage: "img/류시은_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(255,255,255,1)",
+  textColor: "black",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/류시은_1화_썸네일.jpg",
+            thumbnail: "img/3107류시은_1화_썸네일.jpg",
           }
         ]
       },
@@ -402,10 +427,12 @@ margin:0;
         description: "우리 아빠가 살인마인 것 같다.",
         bannerImage: "img/박세은_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(18,20,19,1)",
+  textColor: "white",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/박세은_1화_썸네일.jpg",
+            thumbnail: "img/3108박세은_1화_썸네일.jpg",
           }
         ]
       },
@@ -431,11 +458,13 @@ margin:0;
         author: "서가연",
         description: "전생을 기억한다면 그 삶은 내 것일까. 너는 나일까, 터무니없는 환상일까.",
         bannerImage: "img/서가연_배너.jpg",
+  gradColor: "rgba(0,0,0,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/서가연_1화_썸네일.jpg",
+            thumbnail: "img/3110서가연_1화_썸네일.jpg",
           }
         ]
       },
@@ -446,10 +475,12 @@ margin:0;
         description: "이상현상으로 무너져가는 지구. 무능한 소녀와 날개를 잃은 소년은 좌절을 가로지를 비상을 꿈꾼다.",
         bannerImage: "img/서지은_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(229,224,211,1)",
+  textColor: "black",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/서지은_1화_썸네일.jpg",
+            thumbnail: "img/3111서지은_1화_썸네일.jpg",
           }
         ]
       },
@@ -459,11 +490,13 @@ margin:0;
         author: "손유빈",
         description: "시들어가는 것과 이미 시든 것은 구분될 수 있는가?",
         bannerImage: "img/손유빈_배너.jpg",
+  gradColor: "rgba(200,208,197,1)",
+  textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/손유빈_1화_썸네일.jpg",
+            thumbnail: "img/3112손유빈_1화_썸네일.jpg",
           }
         ]
       },
@@ -473,11 +506,13 @@ margin:0;
         author: "유예린",
         description: "가청주파수보다 낮은 주파수인 초저주파는 약한 안테나에게 편안함을 느끼게 해줘요",
         bannerImage: "img/유예린_배너.jpg",
+  gradColor: "rgba(179,196,151,1)",
+  textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/유예린_1화_썸네일.jpg",
+            thumbnail: "img/3113유예린_1화_썸네일.jpg",
           }
         ]
       },
@@ -487,11 +522,13 @@ margin:0;
         author: "윤수영",
         description: "나의 추억은 파란 화면 가득했던 PC통신, 천X안에 담겨있었다.",
         bannerImage: "img/윤수영_배너.jpg",
+  gradColor: "rgba(187,107,132,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/윤수영_1화_썸네일.jpg",
+            thumbnail: "img/3114윤수영_1화_썸네일.jpg",
           }
         ]
       },
@@ -500,12 +537,14 @@ margin:0;
         title: "Tambourine girl",
         author: "윤정현",
         description: "오는 여름, 그녀는 머리를 녹빛으로 물들인다. 그리고 소년의 단어를 헤아린다.",
+  gradColor: "rgba(62,70,59,1)",
+  textColor: "white",
         bannerImage: "img/윤정현_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/윤정현_1화_썸네일.jpg",
+            thumbnail: "img/3115윤정현_1화_썸네일.jpg",
           }
         ]
       },
@@ -513,13 +552,15 @@ margin:0;
       "2516": {
         title: "Nostalgia",
         author: "이래경",
-        description: "버튜버 그만보고 작업해",
+        description: "그림자 없는 빛이 밝게 빛날 수 있는가.",
         bannerImage: "img/이래경_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(0,0,0,1)",
+  textColor: "white",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/이래경_1화_썸네일.jpg",
+            thumbnail: "img/3116이래경_1화_썸네일.jpg",
           }
         ]
       },
@@ -529,38 +570,32 @@ margin:0;
         author: "이소율",
         description: "한 개 사면 열 개를 덤으로 드립니다! 네?",
         bannerImage: "img/이소율_배너.jpg",
+  gradColor: "rgba(0,0,0,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/이소율_1화_썸네일.jpg",
+            thumbnail: "img/3117이소율_1화_썸네일.jpg",
           }
         ]
       },
 
       "2518": {
-        title: "Me: mori;",
+        title: "Me;mori",
         author: "이윤서",
         description: "인조인간은 제 행성에 나타난 과학자를 보고 자신의 기억을 되찾아달라고 한다.",
         bannerImage: "img/이윤서_배너.jpg",
 
-  gradColor: "rgba(91,107,123,1)",
-  textColor: "white",
+  gradColor: "rgba(203,221,224,1)",
+  textColor: "black",
 
         links: { review: "https://example.com/review/yoonseo", backup: "https://example.com/backup/yoonseo" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/이윤서_thumb1.jpg",
+            thumbnail: "img/3118이윤서_1화_썸네일.jpg",
           },
-          {
-            title: "2화",
-            thumbnail: "img/이윤서_thumb2.jpg",
-          },
-          {
-            title: "3화",
-            thumbnail: "img/이윤서_thumb3.jpg",
-          }
         ]
       },
 
@@ -573,7 +608,11 @@ margin:0;
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/이효주_1화_썸네일.jpg",
+            thumbnail: "img/3120이효주_1화_썸네일.jpg",
+          },
+          {
+            title: "2화",
+            thumbnail: "img/3120이효주_2화_썸네일.jpg",
           }
         ]
       },
@@ -584,10 +623,12 @@ margin:0;
         description: "얼어붙어 갔던 내 영혼에 온기를 불어 넣어 준 너의 차가운 숨결",
         bannerImage: "img/임진서_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(191,199,178,1)",
+  textColor: "black",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/임진서_1화_썸네일.jpg",
+            thumbnail: "img/3121임진서_1화_썸네일.jpg",
           }
         ]
       },
@@ -598,10 +639,12 @@ margin:0;
         description: "최고의 친구가 되어주기 위해 친구를 먹었다",
         bannerImage: "img/장은채_배너.jpg",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
+  gradColor: "rgba(0,0,0,1)",
+  textColor: "white",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/장은채_1화_썸네일.jpg",
+            thumbnail: "img/3122장은채_1화_썸네일.jpg",
           }
         ]
       },
@@ -611,11 +654,13 @@ margin:0;
         author: "장지원",
         description: "포식자와 피식자, 그 관계는 역전될 수 있을까?",
         bannerImage: "img/장지원_배너.jpg",
+  gradColor: "rgba(86,17,18,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/장지원_1화_썸네일.jpg",
+            thumbnail: "img/3123장지원_1화_썸네일.jpg",
           }
         ]
       },
@@ -626,18 +671,12 @@ margin:0;
         description: "별똥별을 찾아 떠나는 인어 소녀와 인간 소년의 로맨스 판타지",
         bannerImage: "img/정아인_배너.jpg",
         links: { review: "https://example.com/review/jung", backup: "https://example.com/backup/jung" },
+  gradColor: "rgba(13,27,36,1)",
+  textColor: "white",
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/정아인_1화_썸네일.jpg",
-          },
-          {
-            title: "2화",
-            thumbnail: "img/정아인_2화_썸네일.jpg",
-          },
-          {
-            title: "3화",
-            thumbnail: "img/정아인_3화_썸네일.jpg",
+            thumbnail: "img/3124정아인_1화_썸네일.jpg",
           }
         ]
       },
@@ -647,11 +686,13 @@ margin:0;
         author: "정예린",
         description: "시선 너머로 무대가 부서지는 게 보였다. 고개를 돌리고 눈을 감았다.",
         bannerImage: "img/정예린_배너.jpg",
+  gradColor: "rgba(41,4,11,1)",
+  textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/정예린_1화_썸네일.jpg",
+            thumbnail: "img/3125정예린_1화_썸네일.jpg",
           }
         ]
       },
@@ -661,11 +702,13 @@ margin:0;
         author: "조연호",
         description: "잃어버린 딱지는 책상 서랍 속에 있다.",
         bannerImage: "img/조연호_배너.jpg",
+  gradColor: "rgba(230,127,112,1)",
+  textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
         episodes: [
           {
             title: "1화",
-            thumbnail: "img/조연호_1화_썸네일.jpg",
+            thumbnail: "img/3126조연호_1화_썸네일.jpg",
           }
         ]
       },
@@ -800,6 +843,14 @@ banner.innerHTML = data.bannerImage
 : '';
     document.getElementById('reviewLink').href = data.links?.review || '#';
     document.getElementById('backupLink').href = data.links?.backup || '#';
+
+const title = document.getElementById('title');
+const text = title.textContent;
+
+if (title.textContent.length > 10) {
+  title.style.fontSize = '2.5rem';
+  title.innerHTML = text.slice(0, 15) + '<br>' + text.slice(15);
+}
 
     // 회차 목록 생성 (index 기준: 0 => 1화)
 const list = document.getElementById('episodeList');

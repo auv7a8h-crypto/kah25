@@ -132,25 +132,19 @@ z-index: 1000;
       position: relative;
     }
 
-    /* 메인 컨텐츠 */
-    .MAIN {
-      position: absolute;
-      top: 80px; /* 헤더 공간 확보 */
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      padding: 80px 5% 160px;
-      text-align: left;
-      font-family: 'Do Hyeon', sans-serif;
-      font-size: 3rem;
-      color: black;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 1800px;
-      width: 90%;
-      box-sizing: border-box;
-    }
+.top-banner {
+  width: 100%;
+  height: 300px;        /* 원하는 높이 */
+  overflow: hidden;
+  margin-top: 60px;     /* navbar 높이만큼 띄우기 */
+}
+
+.top-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* 꽉 채우고 잘림 */
+  display: block;
+}
 
     /* 탭(좌측 메뉴) - 기본 숨김. open 클래스 붙이면 보임 */
 .tabs {
@@ -190,14 +184,13 @@ z-index: 1000;
 
     /* 메인 컨텐츠 */
     .MAIN {
-      position: absolute;
-      top: 80px; /* 헤더 공간 확보 */
+  position: relative;
+      top: 0px; /* 헤더 공간 확보 */
       left: 50%;
       transform: translateX(-50%);
       background: white;
-      padding: 80px 5% 160px;
+      padding: 40px 5% 160px;
       text-align: left;
-      font-family: 'Do Hyeon', sans-serif;
       font-size: 3rem;
       color: black;
       display: flex;
@@ -208,8 +201,15 @@ z-index: 1000;
       box-sizing: border-box;
     }
 
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 0px;
+  font-family: 'Do Hyeon', sans-serif;
+}
+
     .gallery {
       display: grid;
+      position: relative;
       grid-template-columns: repeat(5, 1fr);
       gap: 15px;
       width: 100%;
@@ -347,7 +347,6 @@ z-index: 1000;
 </button>
   </div>
 </header>
-
 <div class="search-input-wrapper">
   <input type="text" placeholder="작품 검색...">
 </div>
@@ -357,37 +356,41 @@ z-index: 1000;
   <div class="tab" onclick="filterByYear('26기_루키만창')">26기 루키만창</div>
 </div>
 
-  <!-- 메인 -->
+<div class="top-banner">
+  <img src="img/웹사이트배너.webp" alt="배너">
+</div>
   <div class="MAIN">
 
+<div class="section-title" id="sectionTitle">
+  25기 열혈만창
+</div>
     <div class="gallery">
-
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2501" data-title="Requitall" data-author="권예승">
-        <img src="img/2101권예승_2.jpg" alt="권예승">
+        <img src="img/2101권예승_2.webp" alt="권예승">
         <div class="info">
           <div class="title">Requitall</div>
           <div class="author">권예승</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2502" data-title="壽命換錢所: 수명환전소" data-author="김다솔">
-        <img src="img/샘플.jpg" alt="김다솔">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2502" data-title="수명환전소" data-author="김다솔">
+        <img src="img/2102김다솔_2.webp" alt="김다솔">
         <div class="info">
-          <div class="title">壽命換錢所: 수명환전소</div>
+          <div class="title">수명환전소</div>
           <div class="author">김다솔</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2503" data-title="어제 죽은 마요이쨩" data-author="김민혁">
-        <img src="img/2103김민혁_2.jpg" alt="김민혁">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2503" data-title="어제 죽은 마요이쨩" data-author="にょく">
+        <img src="img/2103김민혁_2.webp" alt="にょく">
         <div class="info">
           <div class="title">어제 죽은 마요이양</div>
-          <div class="author">김민혁</div>
+          <div class="author">にょく</div>
         </div>
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2504" data-title="마법소녀 출입금지" data-author="김예진">
-        <img src="img/샘플.jpg" alt="김예진">
+        <img src="img/2104김예진_2.webp" alt="김예진">
         <div class="info">
           <div class="title">마법소녀 출입금지</div>
           <div class="author">김예진</div>
@@ -395,7 +398,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2505" data-title="프로젝트 머메이드" data-author="김윤아">
-        <img src="img/2105김윤아_2.jpg" alt="김윤아">
+        <img src="img/2105김윤아_2.webp" alt="김윤아">
         <div class="info">
           <div class="title">프로젝트 머메이드</div>
           <div class="author">김윤아</div>
@@ -403,7 +406,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2506" data-title="사랑이 이상해" data-author="김지원">
-        <img src="img/샘플.jpg" alt="김지원">
+        <img src="img/2106김지원_2.webp" alt="김지원">
         <div class="info">
           <div class="title">사랑이 이상해</div>
           <div class="author">김지원</div>
@@ -411,31 +414,31 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2507" data-title="토마토 살인사건" data-author="류시은">
-        <img src="img/2107류시은_2.jpg" alt="류시은">
+        <img src="img/2107류시은_2.webp" alt="류시은">
         <div class="info">
           <div class="title">토마토 살인사건</div>
           <div class="author">류시은</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2508" data-title="HIBERNATION" data-author="박세은">
-        <img src="img/2108박세은_2.jpg" alt="박세은">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2508" data-title="HIBERNATION" data-author="오륙">
+        <img src="img/2108박세은_2.webp" alt="오륙">
         <div class="info">
           <div class="title">HIBERNATION</div>
-          <div class="author">박세은</div>
+          <div class="author">오륙</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2509" data-title="심정" data-author="박재은">
-        <img src="img/3109박재은_2.webp" alt="박재은">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2509" data-title="심정" data-author="타야">
+        <img src="img/3109박재은_2.webp" alt="타야">
         <div class="info">
-          <div class="title">심정</div>
-          <div class="author">박재은</div>
+          <div class="title">深穽</div>
+          <div class="author">타야</div>
         </div>
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2510" data-title="delulu" data-author="서가연">
-        <img src="img/2110서가연_2.jpg" alt="서가연">
+        <img src="img/2110서가연_2.webp" alt="서가연">
         <div class="info">
           <div class="title">delulu</div>
           <div class="author">서가연</div>
@@ -443,7 +446,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2511" data-title="OASIN: 퇴출비상책" data-author="서지은">
-        <img src="img/2111서지은_2.jpg" alt="서지은">
+        <img src="img/2111서지은_2.webp" alt="서지은">
         <div class="info">
           <div class="title">OASIN: 퇴출비상책</div>
           <div class="author">서지은</div>
@@ -451,7 +454,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2512" data-title="얼마 동안 물을 주지 않으면 선인장이 시드는가" data-author="손유빈">
-        <img src="img/2112손유빈_2.jpg" alt="손유빈">
+        <img src="img/2112손유빈_2.webp" alt="손유빈">
         <div class="info">
           <div class="title">얼마 동안 물을 주지 않으면 선인장이 시드는가</div>
           <div class="author">손유빈</div>
@@ -459,7 +462,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2513" data-title="리슨케어뿔리" data-author="유예린">
-        <img src="img/2113유예린_2.jpg" alt="유예린">
+        <img src="img/2113유예린_2.webp" alt="유예린">
         <div class="info">
           <div class="title">리슨케어뿔리</div>
           <div class="author">유예린</div>
@@ -468,7 +471,7 @@ z-index: 1000;
 
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2514" data-title="박명의 틈새에서" data-author="윤수영">
-        <img src="img/2114윤수영_2.jpg" alt="윤수영">
+        <img src="img/2114윤수영_2.webp" alt="윤수영">
         <div class="info">
           <div class="title">박명의 틈새에서</div>
           <div class="author">윤수영</div>
@@ -476,7 +479,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2515" data-title="Tambourine girl" data-author="윤정현">
-        <img src="img/2115윤정현_2.jpg" alt="윤정현">
+        <img src="img/2115윤정현_2.webp" alt="윤정현">
         <div class="info">
           <div class="title">Tambourine girl</div>
           <div class="author">윤정현</div>
@@ -484,7 +487,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2516" data-title="Nostalgia" data-author="이래경">
-        <img src="img/2116이래경_2.jpg" alt="이래경">
+        <img src="img/2116이래경_2.webp" alt="이래경">
         <div class="info">
           <div class="title">Nostalgia</div>
           <div class="author">이래경</div>
@@ -492,7 +495,7 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2517" data-title="1+!0" data-author="이소율">
-        <img src="img/2117이소율_2.jpg" alt="이소율">
+        <img src="img/2117이소율_2.webp" alt="이소율">
         <div class="info">
           <div class="title">1+!0</div>
           <div class="author">이소율</div>
@@ -500,23 +503,23 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2518" data-title="Me: mori;" data-author="이윤서">
-        <img src="img/2118이윤서_2.jpg" alt="이윤서">
+        <img src="img/2118이윤서_2.webp" alt="이윤서">
         <div class="info">
-          <div class="title">Me: mori;</div>
+          <div class="title">Me;mori</div>
           <div class="author">이윤서</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2520" data-title="異重豫定論:여명의 구원자" data-author="이효주">
-        <img src="img/2120이효주_2.jpg" alt="이효주">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2520" data-title="異重豫定論:여명의 구원자" data-author="TOFU">
+        <img src="img/2120이효주_2.webp" alt="TOFU">
         <div class="info">
           <div class="title">異重豫定論:여명의 구원자</div>
-          <div class="author">이효주</div>
+          <div class="author">TOFU</div>
         </div>
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2521" data-title="어는 점의 온기" data-author="임진서">
-        <img src="img/2121임진서_2.jpg" alt="임진서">
+        <img src="img/2121임진서_2.webp" alt="임진서">
         <div class="info">
           <div class="title">어는 점의 온기</div>
           <div class="author">임진서</div>
@@ -524,39 +527,39 @@ z-index: 1000;
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2522" data-title="kid A" data-author="장은채">
-        <img src="img/2122장은채_2.jpg" alt="장은채">
+        <img src="img/2122장은채_2.webp" alt="장은채">
         <div class="info">
           <div class="title">kid A</div>
           <div class="author">장은채</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2523" data-title="OUT OF SIGHT" data-author="장지원">
-        <img src="img/2123장지원_2.jpg" alt="장지원">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2523" data-title="OUT OF SIGHT" data-author="CHADOCK">
+        <img src="img/2123장지원_2.webp" alt="CHADOCK">
         <div class="info">
           <div class="title">OUT OF SIGHT</div>
-          <div class="author">장지원</div>
+          <div class="author">CHADOCK</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2524" data-title="유성의 바다" data-author="정아인">
-        <img src="img/2124정아인_2.jpg" alt="정아인">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2524" data-title="유성의 바다" data-author="아인">
+        <img src="img/2124정아인_2.webp" alt="아인">
         <div class="info">
           <div class="title">유성의 바다</div>
-          <div class="author">정아인</div>
+          <div class="author">아인</div>
         </div>
       </div>
 
-      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2525" data-title="Monodrama" data-author="정예린">
-        <img src="img/2125정예린_2.jpg" alt="정예린">
+      <div class="webtoon year-25기_열혈만창 category-all show" data-id="2525" data-title="Monodrama" data-author="욘디">
+        <img src="img/2125정예린_2.webp" alt="욘디">
         <div class="info">
           <div class="title">Monodrama</div>
-          <div class="author">정예린</div>
+          <div class="author">욘디</div>
         </div>
       </div>
 
       <div class="webtoon year-25기_열혈만창 category-all show" data-id="2526" data-title="타워엔 파이어볼" data-author="조연호">
-        <img src="img/2126조연호_2.jpg" alt="조연호">
+        <img src="img/2126조연호_2.webp" alt="조연호">
         <div class="info">
           <div class="title">타워엔 파이어볼</div>
           <div class="author">조연호</div>
@@ -602,6 +605,9 @@ function updateDisplay() {
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.toggle('active', tab.textContent === selectedYear);
   });
+
+  const title = document.getElementById('sectionTitle');
+  title.textContent = selectedYear.replace('_', ' ');
 }
 
 function filterByYear(year) {
@@ -635,6 +641,32 @@ function goToDetail(workId) {
         goToDetail(id); 
       });
     });
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function randomizeGalleryOrder() {
+  const gallery = document.querySelector('.gallery');
+  const items = Array.from(gallery.querySelectorAll('.webtoon'));
+
+  shuffleArray(items);
+
+  items.forEach(item => {
+    gallery.appendChild(item);
+  });
+}
+
+const hasVisitedIndex = sessionStorage.getItem('hasVisitedIndex');
+
+if (hasVisitedIndex) {
+  randomizeGalleryOrder();   // 새로고침 이후엔 랜덤
+} else {
+  sessionStorage.setItem('hasVisitedIndex', 'true'); // 첫 진입은 번호순 유지
+}
 
 updateDisplay();
 
