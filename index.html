@@ -593,13 +593,6 @@ menuBtn.addEventListener('click', () => {
   tabs.classList.toggle('open');
 });
 
-const searchBtn = document.getElementById('searchBtn');
-const searchWrapper = document.querySelector('.search-input-wrapper');
-
-searchBtn.addEventListener('click', () => {
-  searchWrapper.style.display = searchWrapper.style.display === 'flex' ? 'none' : 'flex';
-});
-
     // ✅ 상세 페이지 이동
 function goToDetail(workId) {
   window.location.href = `page1.html?workId=${workId}`;
