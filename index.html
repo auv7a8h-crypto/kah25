@@ -252,30 +252,16 @@ z-index: 1000;
 
   .gallery {
     grid-template-columns: repeat(3, 1fr);
-      width: 100%; 
      gap: 0px;
   }
 
     .webtoon {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      background: white;
-      background-size: cover;
-      background-position: center;
 padding: 3px;
     }
-
-  .webtoon img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    flex-shrink: 0; /* 이미지가 줄어들지 않게 */
-  }
 
   .webtoon .info {
     padding: 5px 0px 20px;
     background: white; /* 이미지 아래 텍스트 영역 */
-    flex-shrink: 0;
   }
 
   .webtoon .title {
@@ -286,7 +272,6 @@ padding: 3px;
 
   .webtoon .author {
     font-size: 0.5rem;
-    color: #666;
     margin: 0;
       padding-top: 2px;
   }
