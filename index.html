@@ -12,6 +12,11 @@
 
   <style type="text/css">
     /* 기본 설정 */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'Nanum Gothic', serif;
@@ -55,82 +60,7 @@ z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   color: #000; cursor: pointer;
 }
-.icon-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
-
-.navbar .search-box {
-  display: flex;
-  align-items: center;
-}
-
-.search-input-wrapper {
-  display: none;
-  position: absolute;
-  top: 10px; /* 리본바 안쪽 위치 */
-  right: 80px; /* 돋보기 좌측 */
-  background: white;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  z-index: 1000;
-}
-
-.search-input-wrapper input {
-  width: 200px;
-  padding: 5px;
-}
-
->
-    /* 기본 설정 */
-    body {
-      margin: 0;
-      font-family: 'Nanum Gothic', serif;
-      width: 100%;
-    }
-
-    html {
-      overflow-y: overlay;          /* 스크롤 가능 */
-      -ms-overflow-style: none;    /* IE/Edge */
-      scrollbar-width: none;       /* Firefox */
-    }
-    html::-webkit-scrollbar,
-    body::-webkit-scrollbar {
-      width: 0;                    /* WebKit */
-      height: 0;
-      display: none;
-    }
-
-    .desktop-only { display: inline; }
-    .mobile-only { display: none; }
-
-    .navbar {
-      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-      background: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 0px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-    }
-    .navbar.hidden { transform: translateY(-100%); }
-
-    .menu, .search-box {
-      padding: 0 20px; /* 좌우 여백 */
-    }
-
-    .icon-btn {
-      background: none; border: 0; padding: 6px;
-      display: flex; align-items: center; justify-content: center;
-      color: #000; cursor: pointer;
-    }
-    .icon-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
-
-    .navbar .search-box {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
+.icon-btn:focus { outline: 2px solid #000; outline-offset: 1px; }
 
 .top-banner {
   width: 100%;
@@ -150,13 +80,14 @@ z-index: 1000;
 .tabs {
   display: flex;
   flex-direction: column;
-  position: fixed;    /* 화면 좌측 고정 */
-  top: 60px;          /* 리본바 바로 밑 */
-  left: 0;            /* 화면 좌측 끝 */
-  width: 400px;       /* 필요 시 조절 */
-  height: calc(100vh - 60px);
+  position: fixed;
+  top: 0px;
+  padding-top: 75px;
+  left: 0;
+  width: 180px;       /* 필요 시 조절 */
+  height: 100vh;
   background: #ffffff;
-  z-index: 1000; 
+  z-index: 999; 
   overflow-y: auto;
 
   transform: translateX(-100%);
@@ -169,12 +100,14 @@ z-index: 1000;
 }
 
     .tabs .tab {
+  display: flex;
+  align-items: center;   /* 세로 가운데 */
+  justify-content: flex-start; /* 가로 왼쪽 */
       width: 100%;
-      height: 56px;
-      line-height: 56px;
+      height: 46px;
       border: none;
       text-align: left;
-      padding-left: 16px;
+      padding-left: 30px;
       font-size: 1.15rem;
       font-weight: 700;
       cursor: pointer;
@@ -189,7 +122,7 @@ z-index: 1000;
       left: 50%;
       transform: translateX(-50%);
       background: white;
-      padding: 40px 5% 160px;
+      padding: 40px 5% 140px;
       text-align: left;
       font-size: 3rem;
       color: black;
@@ -203,7 +136,7 @@ z-index: 1000;
 
 .section-title {
   font-size: 2.5rem;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
   font-family: 'Do Hyeon', sans-serif;
 }
 
@@ -211,7 +144,7 @@ z-index: 1000;
       display: grid;
       position: relative;
       grid-template-columns: repeat(5, 1fr);
-      gap: 15px;
+      gap: 10px;
       width: 100%;
       max-width: 1700px;
       box-sizing: border-box;
@@ -229,7 +162,7 @@ z-index: 1000;
       align-items: left;
       font-size: 20px;
       color: white;
-      padding: 5px;
+      padding: 0px;
       display: none; /* 기본 숨김 */
     }
 
@@ -247,7 +180,7 @@ z-index: 1000;
 
     .webtoon .info {
       text-align: left;
-  padding: 10px 5px 0;
+  padding: 10px 0px 20px;
       font-family: 'Nanum Gothic';
   flex-shrink: 0
     }
@@ -268,6 +201,20 @@ z-index: 1000;
       padding-top: 3px;
     }
 
+.site-footer {
+  width: 100%;
+  padding: 40px 0px;
+  text-align: center;
+  font-size: 0.6rem;
+  color: #888;
+  background: #fff;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+
     /* 반응형 */
     @media screen and (max-width: 768px) {
       .desktop-only { display: none; }
@@ -280,14 +227,33 @@ z-index: 1000;
         margin-top: 10px;
       }
 
+.top-banner {
+  width: 100%;
+  height: 150px;        /* 원하는 높이 */
+  overflow: hidden;
+  margin-top: 60px;     /* navbar 높이만큼 띄우기 */
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-left: 5px;
+  font-family: 'Do Hyeon', sans-serif;
+}
+
   .MAIN {
-        margin-left: -9%;
+  position: relative;
+  left: auto;
+  transform: none;
+  width: 100%;
+  max-width: none;
+  padding: 30px 10px 40px;
+  margin: 0;
   }
 
   .gallery {
     grid-template-columns: repeat(3, 1fr);
-      width: 120%; 
-     gap: 5px;
+      width: 100%; 
+     gap: 0px;
   }
 
     .webtoon {
@@ -296,6 +262,7 @@ z-index: 1000;
       background: white;
       background-size: cover;
       background-position: center;
+padding: 3px;
     }
 
   .webtoon img {
@@ -306,13 +273,13 @@ z-index: 1000;
   }
 
   .webtoon .info {
-    padding: 5px;
+    padding: 5px 0px 20px;
     background: white; /* 이미지 아래 텍스트 영역 */
     flex-shrink: 0;
   }
 
   .webtoon .title {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: bold;
     margin: 0;
   }
@@ -321,9 +288,13 @@ z-index: 1000;
     font-size: 0.5rem;
     color: #666;
     margin: 0;
-      padding-top: 1px;
+      padding-top: 2px;
   }
 
+.site-footer {
+  padding: 30px 0px;
+  font-size: 0.4rem;
+}
     }
   </style>
 </head>
@@ -337,19 +308,7 @@ z-index: 1000;
   </svg>
 </button>
   </div>
-
-  <div class="search-box">
-<button class="icon-btn" id="searchBtn" aria-label="검색">
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-    <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  </svg>
-</button>
-  </div>
 </header>
-<div class="search-input-wrapper">
-  <input type="text" placeholder="작품 검색...">
-</div>
 
 <div class="tabs">
   <div class="tab active" onclick="filterByYear('25기_열혈만창')">25기 열혈만창</div>
@@ -573,9 +532,11 @@ z-index: 1000;
           <div class="author">26기 만화창작과</div>
         </div>
       </div>
-
     </div>
   </div>
+<footer class="site-footer">
+  <p>made by 25C 이윤서<br>2026 KAHC 만화창작과 출판기념회<br>지도교사 이정화 김진영 장금희 전수혜 임효선<br><br>13023 경기 하남시 검단산로 223 한국애니메이션고등학교<br>WEB anigo-h.goegh.kr　|　TEL 031-790-9041　|　FAX 031-791-0548</p>
+</footer>
 
   <script>
     // ✅ 헤더 스크롤 동작
@@ -589,8 +550,18 @@ z-index: 1000;
       } else {
         navbar.classList.remove('hidden');
       }
+  tabs.classList.remove('open');
       lastScroll = currentScroll;
     });
+
+document.addEventListener('click', (e) => {
+  const isMenu = tabs.contains(e.target);
+  const isButton = menuBtn.contains(e.target);
+
+  if (!isMenu && !isButton) {
+    tabs.classList.remove('open');
+  }
+});
 
     // ✅ 작품 필터링
 let selectedYear = '25기_열혈만창';
