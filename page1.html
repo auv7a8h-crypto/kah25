@@ -67,8 +67,8 @@ margin:20px auto;
   background:linear-gradient(
     90deg,
     var(--grad-color) 0%,
-    var(--grad-color) 52%,
-    transparent 60%
+    var(--grad-color) 50%,
+    transparent 55%
   );
   pointer-events:none;
 }
@@ -352,7 +352,7 @@ margin:0;
         title: "Requitall",
         author: "권예승",
         description: "알고 싶지 않아 모르는척했다.",
-        bannerImage: "img/권예승_배너.jpg",
+        bannerImage: "img/권예승_배너.webp",
   gradColor: "rgba(240,220,209,1)",
   textColor: "black",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -476,7 +476,7 @@ margin:0;
         title: "深穽",
         author: "타야",
         description: "평범한 나날을 보내던 중 친구들이 이상해지기 시작했다.",
-        bannerImage: "img/박재은_배너.jpg",
+        bannerImage: "img/박재은_배너.webp",
   gradColor: "rgba(0,0,0,1)",
   textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -492,7 +492,7 @@ margin:0;
         title: "Delulu",
         author: "서가연",
         description: "전생을 기억한다면 그 삶은 내 것일까. 너는 나일까, 터무니없는 환상일까.",
-        bannerImage: "img/서가연_배너.jpg",
+        bannerImage: "img/서가연_배너.webp",
   gradColor: "rgba(0,0,0,1)",
   textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -604,7 +604,7 @@ margin:0;
         title: "1+!0",
         author: "이소율",
         description: "한 개 사면 열 개를 덤으로 드립니다! 네?",
-        bannerImage: "img/이소율_배너.jpg",
+        bannerImage: "img/이소율_배너.webp",
   gradColor: "rgba(0,0,0,1)",
   textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -620,7 +620,7 @@ margin:0;
         title: "Me;mori",
         author: "이윤서",
         description: "인조인간은 제 행성에 나타난 과학자를 보고 자신의 기억을 되찾아달라고 한다.",
-        bannerImage: "img/이윤서_배너.jpg",
+        bannerImage: "img/이윤서_배너.webp",
 
   gradColor: "rgba(203,221,224,1)",
   textColor: "black",
@@ -672,7 +672,7 @@ margin:0;
         title: "kid A",
         author: "장은채",
         description: "최고의 친구가 되어주기 위해 친구를 먹었다",
-        bannerImage: "img/장은채_배너.jpg",
+        bannerImage: "img/장은채_배너.webp",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
   gradColor: "rgba(0,0,0,1)",
   textColor: "white",
@@ -688,7 +688,7 @@ margin:0;
         title: "OUT OF SIGHT",
         author: "CHADOCK",
         description: "포식자와 피식자, 그 관계는 역전될 수 있을까?",
-        bannerImage: "img/장지원_배너.jpg",
+        bannerImage: "img/장지원_배너.webp",
   gradColor: "rgba(86,17,18,1)",
   textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -704,7 +704,7 @@ margin:0;
         title: "유성의 바다",
         author: "아인",
         description: "별똥별을 찾아 떠나는 인어 소녀와 인간 소년의 로맨스 판타지",
-        bannerImage: "img/정아인_배너.jpg",
+        bannerImage: "img/정아인_배너.webp",
         links: { review: "https://example.com/review/jung", backup: "https://example.com/backup/jung" },
   gradColor: "rgba(13,27,36,1)",
   textColor: "white",
@@ -720,7 +720,7 @@ margin:0;
         title: "Monodrama",
         author: "욘디",
         description: "다 괜찮을 거야.",
-        bannerImage: "img/정예린_배너.jpg",
+        bannerImage: "img/정예린_배너.webp",
   gradColor: "rgba(41,4,11,1)",
   textColor: "white",
         links: { review: "https://example.com/review/park", backup: "https://example.com/backup/park" },
@@ -911,7 +911,7 @@ data.episodes.forEach((ep, index) => {
   `;
 
   li.addEventListener('click', () => {
-    const bookViewerIds = ['2503', '2520', '26'];
+    const bookViewerIds = ['2503', '2520', '2526', '26'];
 
     const viewer = bookViewerIds.includes(workId)
       ? 'bookviewer.html'
